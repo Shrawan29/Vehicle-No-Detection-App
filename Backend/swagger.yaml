@@ -1,0 +1,409 @@
+openapi: 3.0.0
+info:
+  title: Vehicle Management API
+  version: 1.0.0
+  description: API for managing vehicle information.
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /vehicles:
+    get:
+      summary:
+      description: Retrieve a list of all vehicles from the internal database.
+      responses:
+        '200':
+          description: A list of vehicles.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+    post:
+      summary:
+      description: Add a new vehicle to the internal database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '201':
+          description: The newly created vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '400':
+          description: Invalid input.
+
+  /vehicles/{plate}:
+    get:
+      summary: 
+      description: Retrieve a vehicle from the internal database by its plate number.
+      parameters:
+        - in: path
+          name: plate
+          required: true
+          schema:
+            type: string
+          description: The plate number of the vehicle to retrieve.
+      responses:
+        '200':
+          description: The vehicle matching the plate number.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '404':
+          description: Vehicle not found.
+    put:
+      summary:
+      description: Update the details of an existing vehicle in the internal database.
+      parameters:
+        - in: path
+          name: plate
+          required: true
+          schema:
+            type: string
+          description: The plate number of the vehicle to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehicleInput'
+      responses:
+        '200':
+          description: The updated vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '404':
+          description: Vehicle not found.
+        '400':
+          description: Invalid input.
+    delete:
+      summary: 
+      description: Delete a vehicle from the internal database.
+      parameters:
+        - in: path
+          name: plate
+          required: true
+          schema:
+            type: string
+          description: The plate number of the vehicle to delete.
+      responses:
+        '200':
+          description: Vehicle deleted successfully.
+        '404':
+          description: Vehicle not found.
+
+  /vehicles/status/active:
+    get:
+      summary: 
+      description: Retrieve a list of all active vehicles from the internal database.
+      responses:
+        '200':
+          description: A list of active vehicles.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /vehicles/status/inactive:
+    get:
+      summary: 
+      description: Retrieve a list of all inactive vehicles from the internal database.
+      responses:
+        '200':
+          description: A list of inactive vehicles.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /vehicles/owner/{owner}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the internal database by owner.
+      parameters:
+        - in: path
+          name: owner
+          required: true
+          schema:
+            type: string
+          description: The owner of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles owned by the specified owner.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /vehicles/model/{model}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the internal database by model.
+      parameters:
+        - in: path
+          name: model
+          required: true
+          schema:
+            type: string
+          description: The model of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles of the specified model.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /vehicles/year/{year}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the internal database by year.
+      parameters:
+        - in: path
+          name: year
+          required: true
+          schema:
+            type: integer
+          description: The year of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles from the specified year.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /vehicles/color/{color}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the internal database by color.
+      parameters:
+        - in: path
+          name: color
+          required: true
+          schema:
+            type: string
+          description: The color of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles of the specified color.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+
+  /external/vehicles/make/{make}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the  API by make.
+      parameters:
+        - in: path
+          name: make
+          required: true
+          schema:
+            type: string
+          description: The make of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles of the specified make.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object 
+
+        '500':
+          description: Error fetching vehicle data.
+
+  /external/vehicles/fuel/{fuel_type}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the API by fuel type.
+      parameters:
+        - in: path
+          name: fuel_type
+          required: true
+          schema:
+            type: string
+          description: The fuel type of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles of the specified fuel type.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object 
+        '500':
+          description: Error fetching vehicle data.
+
+  /external/vehicles/make/{make}/model/{model}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the API by make and model.
+      parameters:
+        - in: path
+          name: make
+          required: true
+          schema:
+            type: string
+          description: The make of the vehicles to retrieve.
+        - in: path
+          name: model
+          required: true
+          schema:
+            type: string
+          description: The model of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles of the specified make and model.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object 
+        '500':
+          description: Error fetching vehicle data.
+
+  /external/vehicles/year/{year}/model/{model}:
+    get:
+      summary: 
+      description: Retrieve a list of vehicles from the  API by year and model.
+      parameters:
+        - in: path
+          name: year
+          required: true
+          schema:
+            type: integer
+          description: The year of the vehicles to retrieve.
+        - in: path
+          name: model
+          required: true
+          schema:
+            type: string
+          description: The model of the vehicles to retrieve.
+      responses:
+        '200':
+          description: A list of vehicles of the specified year and model.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object 
+        '500':
+          description: Error fetching vehicle data.
+
+  /external/vehicles/cylinders/{cylinders}:
+    get:
+      summary: 
+      description: 
+      parameters:
+        - in: path
+          name: cylinders
+          required: true
+          schema:
+            type: integer
+          description: 
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object 
+        '500':
+          description: 
+
+components:
+  schemas:
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 
+        plate:
+          type: string
+          description: 
+        owner:
+          type: string
+          description: 
+        model:
+          type: string
+          description: 
+        color:
+          type: string
+          description:
+        year:
+          type: integer
+          description: 
+        status:
+          type: string
+          description:
+      example:
+        id: 1
+        plate: ABC1234
+        owner: John Doe
+        model: Toyota Camry
+        color: White
+        year: 2020
+        status: Active
+
+    VehicleInput:
+      type: object
+      properties:
+        plate:
+          type: string
+          description: 
+        owner:
+          type: string
+          description: 
+        model:
+          type: string
+          description: 
+        color:
+          type: string
+          description:
+        year:
+          type: integer
+          description: 
+        status:
+          type: string
+          description: 
+      example:
+        plate: DEF5678
+        owner: Jane Doe
+        model: Honda Civic
+        color: Red
+        year: 2021
+        status: Active
